@@ -5,19 +5,27 @@ let pokemonRepository = (function () {
   function getAll() {
     return pokemonList;
   }
-
+  // applying 1.9 jQuery to code as of now. fixing appends right now.
   function add(pokemon) {
     pokemonList.push(pokemon);
   }
   function addListItem(pokemon) {
-    let pokemonList = document.querySelector(".pokemon-list");
-    let listpokemon = document.createElement("li");
-    let button = document.createElement("button");
-    button.innerText = pokemon.name;
-    button.classList.add("button-class");
-    listpokemon.appendChild(button);
-    pokemonList.appendChild(listpokemon);
-    button.addEventListener("click", function () {
+    let pokemonList = $(".pokemon-list");
+    // let pokemonList = document.querySelector(".pokemon-list");
+    let li = $("<li> </li>");
+    // $('body').append(newElement);
+    // let listpokemon = document.createElement("li");
+    let button = $(
+      '<button class="button-class"> ' + pokemon.name + "</button>"
+    );
+    // $('body').append(newElement);
+    // let button = document.createElement("button");
+    // button.innerText = pokemon.name;
+
+    // button.classList.add("button-class");
+    li.append(button);
+    pokemonList.append(li);
+    button.on("click", function () {
       showDetails(pokemon);
     });
   }
@@ -53,7 +61,6 @@ let pokemonRepository = (function () {
   }
 
   function loadDetails(item) {
-    let url = item.detailsUrl;
     // return fetch(url)
     //   .then(function (response) {
     //     return response.json();
@@ -74,6 +81,7 @@ let pokemonRepository = (function () {
 
   function showModal(title, text) {
     let modalContainer = $("#modal-container");
+    console.log(modalContainer);
 
     // Clear all existing modal content
     modalContainer.innerHTML = "";
@@ -87,29 +95,37 @@ let pokemonRepository = (function () {
       }
     });
 
-    let modal = document.createElement("div");
-    modal.classList.add("modal");
+    let modal = $('<div class="modal"> </div>');
+    // let modal = document.createElement("div");
+
+    // modal.classList.add("modal");
 
     // Add the new modal content
-    let closeButtonElement = document.createElement("button");
-    closeButtonElement.classList.add("modal-close");
-    closeButtonElement.innerText = "Close";
+    let closeButtonElement = $(
+      '<button class="button-class modal-close">Close</button>'
+    );
+    // let closeButtonElement = document.createElement("button");
+    // closeButtonElement.addClass("modal-close");
+    // closeButtonElement.classList.add("modal-close");
+    // closeButtonElement.innerText = "Close";
 
-    let titleElement = document.createElement("h1");
-    titleElement.innerText = title;
+    let titleElement = $("<h1> " + title + " </h1>");
+    // let titleElement = document.createElement("h1");
+    // titleElement.innerText = title;
 
-    let contentElement = document.createElement("p");
-    contentElement.innerText = text;
+    let contentElement = $("<p> " + text + " </p>");
+    // let contentElement = document.createElement("p");
+    // contentElement.innerText = text;
 
-    modal.appendChild(closeButtonElement);
-    modal.appendChild(titleElement);
-    modal.appendChild(contentElement);
+    modal.append(closeButtonElement);
+    modal.append(titleElement);
+    modal.append(contentElement);
     modalContainer.append(modal);
 
     modalContainer.addClass("is-visible");
 
     return new Promise((resolve, reject) => {
-      closeButtonElement.addEventListener("click", () => {
+      closeButtonElement.on("click", () => {
         dialogPromiseReject = null; // Reset this
         hideModal();
         resolve();
@@ -121,9 +137,13 @@ let pokemonRepository = (function () {
   }
 
   function hideModal() {
-    let modalContainer = document.querySelector("#modal-container");
-    modalContainer.classList.remove("is-visible");
-    modalContainer.removeChild(modalContainer.firstChild);
+    let modalContainer = $("#modal-container");
+    // let modalContainer = document.querySelector("#modal-container");
+    modalContainer.removeClass("is-visible");
+    modalContainer.empty();
+    // modalContainer.classList.remove("is-visible");
+    // modalContainer.removeProp(modalContainer.firstChild);
+    // modalContainer.removeChild(modalContainer.firstChild);
 
     if (dialogPromiseReject) {
       dialogPromiseReject();
@@ -131,9 +151,10 @@ let pokemonRepository = (function () {
     }
   }
 
-  window.addEventListener("keydown", (e) => {
-    let modalContainer = document.querySelector("#modal-container");
-    if (e.key === "Escape" && modalContainer.classList.contains("is-visible")) {
+  $(window).on("keydown", (e) => {
+    let modalContainer = $("#modal-container");
+    // let modalContainer = document.querySelector("#modal-container");
+    if (e.key === "Escape" && modalContainer.hasClass("is-visible")) {
       hideModal();
     }
   });

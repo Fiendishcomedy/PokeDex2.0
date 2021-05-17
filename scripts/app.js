@@ -16,7 +16,7 @@ let pokemonRepository = (function () {
     // $('body').append(newElement);
     // let listpokemon = document.createElement("li");
     let button = $(
-      '<button class="button-class"> ' + pokemon.name + "</button>"
+      '<button class="button-class"> ' + pokemon.name + '</button>'
     );
     // $('body').append(newElement);
     // let button = document.createElement("button");
